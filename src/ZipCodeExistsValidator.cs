@@ -14,7 +14,7 @@ public class ZipCodeExistsValidator : Validator.Validator, IZipCodeExistsValidat
 {
     private readonly AsyncSingleton<HashSet<string>> _zipCodesSet;
 
-    public ZipCodeExistsValidator(ILogger<Validator.Validator> logger, IFileUtil fileUtil) : base(logger)
+    public ZipCodeExistsValidator(ILogger<ZipCodeExistsValidator> logger, IFileUtil fileUtil) : base(logger)
     {
         _zipCodesSet = new AsyncSingleton<HashSet<string>>(async () =>
         {
@@ -27,6 +27,12 @@ public class ZipCodeExistsValidator : Validator.Validator, IZipCodeExistsValidat
 
     public async ValueTask<bool> Validate(string zipCode)
     {
+        if (zipCode.Length > 5)
+        {
+            zipCode = zipCode.Substring(0, 5);
+            Logger.LogWarning("ZipCodes longer than 5 are not supported and are trimmed past 5 characters");
+        }
+
         if ((await _zipCodesSet.Get()).Contains(zipCode))
             return true;
 
