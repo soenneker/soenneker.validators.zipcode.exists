@@ -1,6 +1,7 @@
 using System;
 using Soenneker.Validators.Validator.Abstract;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Soenneker.Validators.ZipCode.Exists.Abstract;
 
@@ -14,6 +15,7 @@ public interface IZipCodeExistsValidator : IValidator, IAsyncDisposable, IDispos
     /// Validates a 5-digit US ZipCode.
     /// </summary>
     /// <param name="zipCode">The 5-digit US ZipCode to validate.</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>True if the ZipCode is valid, otherwise false.</returns>
-    ValueTask<bool> Validate(string zipCode);
+    ValueTask<bool> Validate(string zipCode, CancellationToken cancellationToken = default);
 }

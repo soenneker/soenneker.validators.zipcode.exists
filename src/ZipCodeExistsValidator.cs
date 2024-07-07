@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Soenneker.Extensions.ValueTask;
 using Soenneker.Utils.AsyncSingleton;
 using Soenneker.Utils.File.Abstract;
 using Soenneker.Validators.ZipCode.Exists.Abstract;
@@ -16,16 +18,16 @@ public class ZipCodeExistsValidator : Validator.Validator, IZipCodeExistsValidat
 
     public ZipCodeExistsValidator(ILogger<ZipCodeExistsValidator> logger, IFileUtil fileUtil) : base(logger)
     {
-        _zipCodesSet = new AsyncSingleton<HashSet<string>>(async () =>
+        _zipCodesSet = new AsyncSingleton<HashSet<string>>(async (token, _) =>
         {
             // TODO: should be file -> hashset, not file -> list -> hashset
-            List<string> list = await fileUtil.ReadFileAsLines(Path.Combine("Resources", "zipcodes.txt"));
+            List<string> list = await fileUtil.ReadFileAsLines(Path.Combine("Resources", "zipcodes.txt"), token).NoSync();
             var hashSet = new HashSet<string>(list);
             return hashSet;
         });
     }
 
-    public async ValueTask<bool> Validate(string zipCode)
+    public async ValueTask<bool> Validate(string zipCode, CancellationToken cancellationToken = default)
     {
         if (zipCode.Length > 5)
         {
@@ -33,7 +35,7 @@ public class ZipCodeExistsValidator : Validator.Validator, IZipCodeExistsValidat
             Logger.LogWarning("ZipCodes longer than 5 are not supported and are trimmed past 5 characters");
         }
 
-        if ((await _zipCodesSet.Get()).Contains(zipCode))
+        if ((await _zipCodesSet.Get(cancellationToken)).Contains(zipCode))
             return true;
 
         return false;
