@@ -43,6 +43,6 @@
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
         <PackageReference Include="Soenneker.Data.ZipCode" Version="2.2.315" PrivateAssets="analyzers;build" />
         <PackageReference Include="Soenneker.Utils.File" Version="3.0.1339" />
-        <PackageReference Include="Soenneker.Validators.Validator" Version="3.0.388" />
+        <PackageReference Include="Soenneker.Validators.Validator" Version="3.0.389" />
     </ItemGroup>
 </Project>
