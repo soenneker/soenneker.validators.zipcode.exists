@@ -42,7 +42,7 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
         <PackageReference Include="Soenneker.Data.ZipCode" Version="2.2.315" PrivateAssets="analyzers;build" />
-        <PackageReference Include="Soenneker.Utils.File" Version="3.0.1407" />
+        <PackageReference Include="Soenneker.Utils.File" Version="3.0.1408" />
         <PackageReference Include="Soenneker.Validators.Validator" Version="3.0.408" />
     </ItemGroup>
 </Project>
