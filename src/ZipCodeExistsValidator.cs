@@ -22,8 +22,7 @@ public class ZipCodeExistsValidator : Validator.Validator, IZipCodeExistsValidat
         {
             // TODO: should be file -> hashset, not file -> list -> hashset
             List<string> list = await fileUtil.ReadAsLines(Path.Combine("Resources", "zipcodes.txt"), token).NoSync();
-            var hashSet = new HashSet<string>(list);
-            return hashSet;
+            return [..list];
         });
     }
 
