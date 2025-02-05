@@ -15,8 +15,8 @@ public static class ZipCodeExistsValidatorRegistrar
     /// </summary>
     public static IServiceCollection AddZipCodeExistsValidatorAsSingleton(this IServiceCollection services)
     {
-        services.TryAddSingleton<IZipCodeExistsValidator, ZipCodeExistsValidator>();
-        services.AddFileUtilAsSingleton();
+        services.AddFileUtilAsSingleton()
+                .TryAddSingleton<IZipCodeExistsValidator, ZipCodeExistsValidator>();
 
         return services;
     }
@@ -26,8 +26,8 @@ public static class ZipCodeExistsValidatorRegistrar
     /// </summary>
     public static IServiceCollection AddZipCodeExistsValidatorAsScoped(this IServiceCollection services)
     {
-        services.TryAddScoped<IZipCodeExistsValidator, ZipCodeExistsValidator>();
-        services.AddFileUtilAsScoped();
+        services.AddFileUtilAsScoped()
+                .TryAddScoped<IZipCodeExistsValidator, ZipCodeExistsValidator>();
 
         return services;
     }
