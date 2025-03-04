@@ -40,7 +40,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Soenneker.Data.ZipCode" Version="3.0.410" PrivateAssets="analyzers;build" />
+        <PackageReference Include="Soenneker.Data.ZipCode" Version="3.0.439" PrivateAssets="analyzers;build" />
         <PackageReference Include="Soenneker.Utils.File" Version="3.0.1829" />
         <PackageReference Include="Soenneker.Validators.Validator" Version="3.0.636" />
     </ItemGroup>
