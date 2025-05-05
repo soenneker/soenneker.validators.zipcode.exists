@@ -1,4 +1,4 @@
-# Contributing to Soenneker.Validators.ZipCode.Exists
+﻿# Contributing to Soenneker.Validators.ZipCode.Exists
 
 We're excited that you're interested in contributing!
 
