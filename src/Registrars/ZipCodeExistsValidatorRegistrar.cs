@@ -6,7 +6,7 @@ using Soenneker.Validators.ZipCode.Exists.Abstract;
 namespace Soenneker.Validators.ZipCode.Exists.Registrars;
 
 /// <summary>
-/// A validation module checking for existance of US ZipCodes, updated daily (if available).
+/// A validation module checking for existence of US ZipCodes, updated daily (if available).
 /// </summary>
 public static class ZipCodeExistsValidatorRegistrar
 {
@@ -15,8 +15,7 @@ public static class ZipCodeExistsValidatorRegistrar
     /// </summary>
     public static IServiceCollection AddZipCodeExistsValidatorAsSingleton(this IServiceCollection services)
     {
-        services.AddFileUtilAsSingleton()
-                .TryAddSingleton<IZipCodeExistsValidator, ZipCodeExistsValidator>();
+        services.AddFileUtilAsSingleton().TryAddSingleton<IZipCodeExistsValidator, ZipCodeExistsValidator>();
 
         return services;
     }
@@ -26,8 +25,7 @@ public static class ZipCodeExistsValidatorRegistrar
     /// </summary>
     public static IServiceCollection AddZipCodeExistsValidatorAsScoped(this IServiceCollection services)
     {
-        services.AddFileUtilAsScoped()
-                .TryAddScoped<IZipCodeExistsValidator, ZipCodeExistsValidator>();
+        services.AddFileUtilAsScoped().TryAddScoped<IZipCodeExistsValidator, ZipCodeExistsValidator>();
 
         return services;
     }

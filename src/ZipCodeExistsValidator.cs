@@ -12,7 +12,7 @@ using Soenneker.Validators.ZipCode.Exists.Abstract;
 namespace Soenneker.Validators.ZipCode.Exists;
 
 /// <inheritdoc cref="IZipCodeExistsValidator"/>
-public class ZipCodeExistsValidator : Validator.Validator, IZipCodeExistsValidator
+public sealed class ZipCodeExistsValidator : Validator.Validator, IZipCodeExistsValidator
 {
     private readonly AsyncSingleton<HashSet<string>> _zipCodesSet;
 
@@ -21,7 +21,7 @@ public class ZipCodeExistsValidator : Validator.Validator, IZipCodeExistsValidat
         _zipCodesSet = new AsyncSingleton<HashSet<string>>(async (token, _) =>
         {
             // TODO: should be file -> hashset, not file -> list -> hashset
-            List<string> list = await fileUtil.ReadAsLines(Path.Combine("Resources", "zipcodes.txt"), token).NoSync();
+            List<string> list = await fileUtil.ReadAsLines(Path.Combine("Resources", "zipcodes.txt"), true, token).NoSync();
             return [..list];
         });
     }
@@ -42,15 +42,11 @@ public class ZipCodeExistsValidator : Validator.Validator, IZipCodeExistsValidat
 
     public ValueTask DisposeAsync()
     {
-        GC.SuppressFinalize(this);
-
         return _zipCodesSet.DisposeAsync();
     }
 
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
-
         _zipCodesSet.Dispose();
     }
 }
