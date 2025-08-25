@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Soenneker.Extensions.String;
 using Soenneker.Extensions.ValueTask;
 using Soenneker.Utils.AsyncSingleton;
 using Soenneker.Utils.File.Abstract;
@@ -20,14 +21,16 @@ public sealed class ZipCodeExistsValidator : Validator.Validator, IZipCodeExists
     {
         _zipCodesSet = new AsyncSingleton<HashSet<string>>(async (token, _) =>
         {
-            // TODO: should be file -> hashset, not file -> list -> hashset
-            List<string> list = await fileUtil.ReadAsLines(Path.Combine("Resources", "zipcodes.txt"), true, token).NoSync();
-            return [..list];
+            return await fileUtil.ReadToHashSet(Path.Combine("Resources", "zipcodes.txt"), StringComparer.OrdinalIgnoreCase, cancellationToken: token)
+                                 .NoSync();
         });
     }
 
     public async ValueTask<bool> Validate(string zipCode, CancellationToken cancellationToken = default)
     {
+        if (zipCode.IsNullOrWhiteSpace())
+            return false;
+
         if (zipCode.Length > 5)
         {
             zipCode = zipCode.Substring(0, 5);
