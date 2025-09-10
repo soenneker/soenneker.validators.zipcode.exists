@@ -21,7 +21,7 @@ public sealed class ZipCodeExistsValidator : Validator.Validator, IZipCodeExists
     {
         _zipCodesSet = new AsyncSingleton<HashSet<string>>(async (token, _) =>
         {
-            string path = ResourcesPathUtil.GetResourceFilePath("zipcodes.txt");
+            string path = await ResourcesPathUtil.GetResourceFilePath("zipcodes.txt").NoSync();
 
             return await fileUtil.ReadToHashSet(path, StringComparer.OrdinalIgnoreCase, cancellationToken: token)
                 .NoSync();
@@ -35,7 +35,7 @@ public sealed class ZipCodeExistsValidator : Validator.Validator, IZipCodeExists
 
         if (zipCode.Length > 5)
         {
-            zipCode = zipCode.Substring(0, 5);
+            zipCode = zipCode[..5];
             Logger.LogWarning("ZipCodes longer than 5 are not supported and are trimmed past 5 characters");
         }
 
