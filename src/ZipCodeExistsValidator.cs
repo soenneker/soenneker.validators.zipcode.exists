@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -8,6 +7,7 @@ using Soenneker.Extensions.String;
 using Soenneker.Extensions.ValueTask;
 using Soenneker.Utils.AsyncSingleton;
 using Soenneker.Utils.File.Abstract;
+using Soenneker.Utils.Paths.Resources;
 using Soenneker.Validators.ZipCode.Exists.Abstract;
 
 namespace Soenneker.Validators.ZipCode.Exists;
@@ -21,8 +21,10 @@ public sealed class ZipCodeExistsValidator : Validator.Validator, IZipCodeExists
     {
         _zipCodesSet = new AsyncSingleton<HashSet<string>>(async (token, _) =>
         {
-            return await fileUtil.ReadToHashSet(Path.Combine("Resources", "zipcodes.txt"), StringComparer.OrdinalIgnoreCase, cancellationToken: token)
-                                 .NoSync();
+            string path = ResourcesPathUtil.GetResourceFilePath("zipcodes.txt");
+
+            return await fileUtil.ReadToHashSet(path, StringComparer.OrdinalIgnoreCase, cancellationToken: token)
+                .NoSync();
         });
     }
 
@@ -37,7 +39,7 @@ public sealed class ZipCodeExistsValidator : Validator.Validator, IZipCodeExists
             Logger.LogWarning("ZipCodes longer than 5 are not supported and are trimmed past 5 characters");
         }
 
-        if ((await _zipCodesSet.Get(cancellationToken)).Contains(zipCode))
+        if ((await _zipCodesSet.Get(cancellationToken).NoSync()).Contains(zipCode))
             return true;
 
         return false;
