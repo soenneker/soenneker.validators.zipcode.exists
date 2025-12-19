@@ -19,7 +19,7 @@ public sealed class ZipCodeExistsValidator : Validator.Validator, IZipCodeExists
 
     public ZipCodeExistsValidator(ILogger<ZipCodeExistsValidator> logger, IFileUtil fileUtil) : base(logger)
     {
-        _zipCodesSet = new AsyncSingleton<HashSet<string>>(async (token, _) =>
+        _zipCodesSet = new AsyncSingleton<HashSet<string>>(async token =>
         {
             string path = await ResourcesPathUtil.GetResourceFilePath("zipcodes.txt").NoSync();
 
