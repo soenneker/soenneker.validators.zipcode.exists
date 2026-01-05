@@ -16,16 +16,20 @@ namespace Soenneker.Validators.ZipCode.Exists;
 public sealed class ZipCodeExistsValidator : Validator.Validator, IZipCodeExistsValidator
 {
     private readonly AsyncSingleton<HashSet<string>> _zipCodesSet;
+    private readonly IFileUtil _fileUtil;
 
     public ZipCodeExistsValidator(ILogger<ZipCodeExistsValidator> logger, IFileUtil fileUtil) : base(logger)
     {
-        _zipCodesSet = new AsyncSingleton<HashSet<string>>(async token =>
-        {
-            string path = await ResourcesPathUtil.GetResourceFilePath("zipcodes.txt").NoSync();
+        _fileUtil = fileUtil;
+        _zipCodesSet = new AsyncSingleton<HashSet<string>>(CreateZipCodesSet);
+    }
 
-            return await fileUtil.ReadToHashSet(path, StringComparer.OrdinalIgnoreCase, cancellationToken: token)
-                .NoSync();
-        });
+    private async ValueTask<HashSet<string>> CreateZipCodesSet(CancellationToken token)
+    {
+        string path = await ResourcesPathUtil.GetResourceFilePath("zipcodes.txt").NoSync();
+
+        return await _fileUtil.ReadToHashSet(path, StringComparer.OrdinalIgnoreCase, cancellationToken: token)
+            .NoSync();
     }
 
     public async ValueTask<bool> Validate(string zipCode, CancellationToken cancellationToken = default)
