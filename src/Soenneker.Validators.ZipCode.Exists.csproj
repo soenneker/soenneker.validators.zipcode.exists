@@ -1,4 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Project Sdk="Microsoft.NET.Sdk">
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
@@ -30,8 +31,9 @@
         <LangVersion>latest</LangVersion>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageIcon>icon.png</PackageIcon>
-    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild></PropertyGroup>
-    
+        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    </PropertyGroup>
+
     <ItemGroup>
         <None Include="..\README.md" Pack="true" PackagePath="\" />
         <None Include="..\LICENSE" Pack="true" PackagePath="\" />
@@ -40,8 +42,8 @@
 
     <ItemGroup>
         <PackageReference Include="Soenneker.Data.ZipCode" Version="4.0.780" PrivateAssets="analyzers;build" />
-        <PackageReference Include="Soenneker.Utils.File" Version="4.0.2059" />
-        <PackageReference Include="Soenneker.Validators.Validator" Version="4.0.710" />
-        <PackageReference Include="Soenneker.Utils.Paths.Resources" Version="4.0.69" />
+        <PackageReference Include="Soenneker.Utils.File" Version="4.0.2060" />
+        <PackageReference Include="Soenneker.Validators.Validator" Version="4.0.711" />
+        <PackageReference Include="Soenneker.Utils.Paths.Resources" Version="4.0.70" />
     </ItemGroup>
 </Project>

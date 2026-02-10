@@ -7,7 +7,7 @@ using Soenneker.Extensions.String;
 using Soenneker.Extensions.ValueTask;
 using Soenneker.Utils.AsyncSingleton;
 using Soenneker.Utils.File.Abstract;
-using Soenneker.Utils.Paths.Resources;
+using Soenneker.Utils.Paths.Resources.Abstract;
 using Soenneker.Validators.ZipCode.Exists.Abstract;
 
 namespace Soenneker.Validators.ZipCode.Exists;
@@ -17,16 +17,18 @@ public sealed class ZipCodeExistsValidator : Validator.Validator, IZipCodeExists
 {
     private readonly AsyncSingleton<HashSet<string>> _zipCodesSet;
     private readonly IFileUtil _fileUtil;
+    private readonly IResourcesPathUtil _resourcesPathUtil;
 
-    public ZipCodeExistsValidator(ILogger<ZipCodeExistsValidator> logger, IFileUtil fileUtil) : base(logger)
+    public ZipCodeExistsValidator(ILogger<ZipCodeExistsValidator> logger, IFileUtil fileUtil, IResourcesPathUtil resourcesPathUtil) : base(logger)
     {
         _fileUtil = fileUtil;
+        _resourcesPathUtil = resourcesPathUtil;
         _zipCodesSet = new AsyncSingleton<HashSet<string>>(CreateZipCodesSet);
     }
 
     private async ValueTask<HashSet<string>> CreateZipCodesSet(CancellationToken token)
     {
-        string path = await ResourcesPathUtil.GetResourceFilePath("zipcodes.txt").NoSync();
+        string path = await _resourcesPathUtil.GetResourceFilePath("zipcodes.txt", token).NoSync();
 
         return await _fileUtil.ReadToHashSet(path, StringComparer.OrdinalIgnoreCase, cancellationToken: token)
             .NoSync();
