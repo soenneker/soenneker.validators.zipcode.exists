@@ -20,7 +20,7 @@ public class ZipCodeExistsValidatorTests : HostedUnitTest
     public async Task Validate_ValidZipCode_ReturnsTrue()
     {
         const string validZipCode = "00611";
-        bool result = await _validator.Validate(validZipCode, CancellationToken);
+        bool result = await _validator.Validate(validZipCode, System.Threading.CancellationToken.None);
 
         result.Should().BeTrue();
     }
@@ -29,7 +29,7 @@ public class ZipCodeExistsValidatorTests : HostedUnitTest
     public async Task Validate_LongZipCode_ReturnsTrue()
     {
         const string longZipCode = "00611-5353";
-        bool result = await _validator.Validate(longZipCode, CancellationToken);
+        bool result = await _validator.Validate(longZipCode, System.Threading.CancellationToken.None);
 
         result.Should().BeTrue();
     }
@@ -38,7 +38,7 @@ public class ZipCodeExistsValidatorTests : HostedUnitTest
     public async Task Validate_InvalidZipCode_ReturnsFalse()
     {
         const string validZipCode = "12345";
-        bool result = await _validator.Validate(validZipCode, CancellationToken);
+        bool result = await _validator.Validate(validZipCode, System.Threading.CancellationToken.None);
 
         result.Should().BeFalse();
     }
