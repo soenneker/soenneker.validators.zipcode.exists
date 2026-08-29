@@ -14,6 +14,8 @@ public static class ZipCodeExistsValidatorRegistrar
     /// <summary>
     /// Adds <see cref="IZipCodeExistsValidator"/> as a singleton service. Recommended if you don't want to load the resource every time the validator is instantiated. <para/>
     /// </summary>
+    /// <param name="services">Service collection that receives the registration.</param>
+    /// <returns>The same service collection, so additional registrations can be chained.</returns>
     public static IServiceCollection AddZipCodeExistsValidatorAsSingleton(this IServiceCollection services)
     {
         services.AddResourcesPathUtilAsSingleton().AddFileUtilAsSingleton().TryAddSingleton<IZipCodeExistsValidator, ZipCodeExistsValidator>();
@@ -24,6 +26,8 @@ public static class ZipCodeExistsValidatorRegistrar
     /// <summary>
     /// Adds <see cref="IZipCodeExistsValidator"/> as a scoped service. <para/>
     /// </summary>
+    /// <param name="services">Service collection that receives the registration.</param>
+    /// <returns>The same service collection, so additional registrations can be chained.</returns>
     public static IServiceCollection AddZipCodeExistsValidatorAsScoped(this IServiceCollection services)
     {
         services.AddResourcesPathUtilAsScoped().AddFileUtilAsScoped().TryAddScoped<IZipCodeExistsValidator, ZipCodeExistsValidator>();
