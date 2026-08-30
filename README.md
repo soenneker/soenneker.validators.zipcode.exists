@@ -5,41 +5,65 @@
 
 # Soenneker.Validators.ZipCode.Exists
 
-A validation module checking for existence of US ZipCodes, updated daily (if available) Thread-safe, disposable. Register as a singleton if you don't want to load the resource every time the validator is instantiated.
+Validates US ZIP codes against the data snapshot packaged with the library.
 
-## Install
+## Installation
 
 ```bash
 dotnet add package Soenneker.Validators.ZipCode.Exists
 ```
 
-## Quick start
+## Registration
+
+Register the validator as a singleton when the application can share one in-memory ZIP-code set:
 
 ```csharp
-using Soenneker.Validators.ZipCode.Exists.Registrars;
 using Microsoft.Extensions.DependencyInjection;
+using Soenneker.Validators.ZipCode.Exists.Registrars;
 
-var services = new ServiceCollection();
-var result = services.AddZipCodeExistsValidatorAsSingleton();
+services.AddZipCodeExistsValidatorAsSingleton();
 ```
 
-Adds `IZipCodeExistsValidator` as a singleton service. Recommended if you don't want to load the resource every time the validator is instantiated.
+A scoped registration is also available:
 
-## What you get
+```csharp
+services.AddZipCodeExistsValidatorAsScoped();
+```
 
-- `IZipCodeExistsValidator` — A validation module checking for existence of US ZipCodes, updated daily (if available) Thread-safe, disposable. Register as a singleton if you don't want to load the resource every time the validator is instantiated.
-- `ZipCodeExistsValidatorRegistrar` — A validation module checking for existence of US ZipCodes, updated daily (if available).
+Each scoped instance loads and owns its own cached set. Prefer the singleton registration unless scopes need independent validator instances.
 
-## API at a glance
+## Usage
 
-| API | What it does | Result / important behavior |
-| --- | --- | --- |
-| `IZipCodeExistsValidator.Validate(zipCode, cancellationToken)` | Validates a 5-digit US ZipCode. | True if the ZipCode is valid, otherwise false. |
-| `ZipCodeExistsValidatorRegistrar.AddZipCodeExistsValidatorAsSingleton(services)` | Adds `IZipCodeExistsValidator` as a singleton service. Recommended if you don't want to load the resource every time the validator is instantiated. | The same service collection, so additional registrations can be chained. |
-| `ZipCodeExistsValidatorRegistrar.AddZipCodeExistsValidatorAsScoped(services)` | Adds `IZipCodeExistsValidator` as a scoped service. | The same service collection, so additional registrations can be chained. |
+```csharp
+using Soenneker.Validators.ZipCode.Exists.Abstract;
 
-## Practical notes
+public sealed class AddressService
+{
+    private readonly IZipCodeExistsValidator _zipCodeValidator;
 
-- Cancellation stops pending work; it does not undo work that has already completed.
-- Calls that return a cached or singleton value reuse the same instance until the owning service is disposed.
-- Dispose instances you own when their scope ends so held resources can be released.
+    public AddressService(IZipCodeExistsValidator zipCodeValidator)
+    {
+        _zipCodeValidator = zipCodeValidator;
+    }
+
+    public ValueTask<bool> IsKnownZipCode(string zipCode, CancellationToken cancellationToken = default)
+    {
+        return _zipCodeValidator.Validate(zipCode, cancellationToken);
+    }
+}
+```
+
+```csharp
+await validator.Validate("00611");       // true when present in the packaged data
+await validator.Validate("00611-5353");  // checks "00611"
+await validator.Validate("12345");       // false when absent from the packaged data
+```
+
+## Behavior
+
+- Null, empty, and whitespace-only values return `false`.
+- Values longer than five characters are truncated to their first five characters. This permits ZIP+4 input, but the suffix is not validated.
+- Values of five characters or fewer are matched exactly against the packaged data.
+- The data is loaded lazily on the first validation call and cached for the validator's lifetime.
+- A `true` result means the five-digit value appears in the package's data snapshot. It does not verify that an address exists or that mail can currently be delivered there.
+- Dispose the validator only when you own it directly. Instances resolved from dependency injection are disposed by the container.

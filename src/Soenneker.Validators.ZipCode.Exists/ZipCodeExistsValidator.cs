@@ -12,7 +12,6 @@ using Soenneker.Validators.ZipCode.Exists.Abstract;
 
 namespace Soenneker.Validators.ZipCode.Exists;
 
-/// <inheritdoc cref="IZipCodeExistsValidator"/>
 public sealed class ZipCodeExistsValidator : Validator.Validator, IZipCodeExistsValidator
 {
     private readonly AsyncSingleton<HashSet<string>> _zipCodesSet;
@@ -51,18 +50,11 @@ public sealed class ZipCodeExistsValidator : Validator.Validator, IZipCodeExists
         return false;
     }
 
-    /// <summary>
-    /// Asynchronously releases resources used by the current instance.
-    /// </summary>
-    /// <returns>A task that represents the asynchronous operation.</returns>
     public ValueTask DisposeAsync()
     {
         return _zipCodesSet.DisposeAsync();
     }
 
-    /// <summary>
-    /// Releases resources used by the current instance.
-    /// </summary>
     public void Dispose()
     {
         _zipCodesSet.Dispose();

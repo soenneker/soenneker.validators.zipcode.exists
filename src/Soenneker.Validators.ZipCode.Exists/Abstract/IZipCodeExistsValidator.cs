@@ -6,16 +6,16 @@ using System.Threading;
 namespace Soenneker.Validators.ZipCode.Exists.Abstract;
 
 /// <summary>
-/// A validation module checking for existence of US ZipCodes, updated daily (if available) <para/>
-/// Thread-safe, disposable. Register as a singleton if you don't want to load the resource every time the validator is instantiated.
+/// Validates US ZIP codes against the data snapshot packaged with the library.
+/// The data is loaded lazily and cached for the lifetime of the validator.
 /// </summary>
 public interface IZipCodeExistsValidator : IValidator, IAsyncDisposable, IDisposable
 {
     /// <summary>
-    /// Validates a 5-digit US ZipCode.
+    /// Determines whether the first five characters of a US ZIP code appear in the packaged data.
     /// </summary>
-    /// <param name="zipCode">The 5-digit US ZipCode to validate.</param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>True if the ZipCode is valid, otherwise false.</returns>
+    /// <param name="zipCode">The ZIP code to check. Values longer than five characters are truncated; null, empty, and whitespace-only values return <see langword="false"/>.</param>
+    /// <param name="cancellationToken">Token used to cancel loading the packaged data.</param>
+    /// <returns><see langword="true"/> when the five-digit value appears in the packaged data; otherwise, <see langword="false"/>.</returns>
     ValueTask<bool> Validate(string zipCode, CancellationToken cancellationToken = default);
 }

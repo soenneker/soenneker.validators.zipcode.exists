@@ -7,12 +7,12 @@ using Soenneker.Validators.ZipCode.Exists.Abstract;
 namespace Soenneker.Validators.ZipCode.Exists.Registrars;
 
 /// <summary>
-/// A validation module checking for existence of US ZipCodes, updated daily (if available).
+/// Registers the ZIP-code existence validator and its dependencies.
 /// </summary>
 public static class ZipCodeExistsValidatorRegistrar
 {
     /// <summary>
-    /// Adds <see cref="IZipCodeExistsValidator"/> as a singleton service. Recommended if you don't want to load the resource every time the validator is instantiated. <para/>
+    /// Adds <see cref="IZipCodeExistsValidator"/> as a singleton service so one lazily loaded ZIP-code set is shared by the application.
     /// </summary>
     /// <param name="services">Service collection that receives the registration.</param>
     /// <returns>The same service collection, so additional registrations can be chained.</returns>
@@ -24,7 +24,7 @@ public static class ZipCodeExistsValidatorRegistrar
     }
 
     /// <summary>
-    /// Adds <see cref="IZipCodeExistsValidator"/> as a scoped service. <para/>
+    /// Adds <see cref="IZipCodeExistsValidator"/> as a scoped service. Each scope receives a validator with its own lazily loaded ZIP-code set.
     /// </summary>
     /// <param name="services">Service collection that receives the registration.</param>
     /// <returns>The same service collection, so additional registrations can be chained.</returns>
