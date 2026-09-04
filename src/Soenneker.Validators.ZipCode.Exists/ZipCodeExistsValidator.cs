@@ -12,6 +12,7 @@ using Soenneker.Validators.ZipCode.Exists.Abstract;
 
 namespace Soenneker.Validators.ZipCode.Exists;
 
+/// <inheritdoc cref="IZipCodeExistsValidator" />
 public sealed class ZipCodeExistsValidator : Validator.Validator, IZipCodeExistsValidator
 {
     private readonly AsyncSingleton<HashSet<string>> _zipCodesSet;
