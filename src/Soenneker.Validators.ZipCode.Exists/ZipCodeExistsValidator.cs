@@ -41,14 +41,17 @@ public sealed class ZipCodeExistsValidator : Validator.Validator, IZipCodeExists
 
         if (zipCode.Length > 5)
         {
-            zipCode = zipCode[..5];
             Logger.LogWarning("ZipCodes longer than 5 are not supported and are trimmed past 5 characters");
         }
 
-        if ((await _zipCodesSet.Get(cancellationToken).NoSync()).Contains(zipCode))
-            return true;
+        HashSet<string> zipCodes = await _zipCodesSet.Get(cancellationToken).NoSync();
+        if (zipCode.Length <= 5)
+            return zipCodes.Contains(zipCode);
 
-        return false;
+        if (zipCodes.TryGetAlternateLookup<ReadOnlySpan<char>>(out var lookup))
+            return lookup.Contains(zipCode.AsSpan(0, 5));
+
+        return zipCodes.Contains(zipCode[..5]);
     }
 
     public ValueTask DisposeAsync()
