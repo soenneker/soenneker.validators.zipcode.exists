@@ -43,8 +43,8 @@
 
     <ItemGroup>
         <PackageReference Include="Soenneker.Data.ZipCode" Version="4.0.1017" PrivateAssets="analyzers;build" />
-        <PackageReference Include="Soenneker.Utils.File" Version="4.0.2271" />
+        <PackageReference Include="Soenneker.Utils.File" Version="4.0.2272" />
         <PackageReference Include="Soenneker.Validators.Validator" Version="4.0.739" />
-        <PackageReference Include="Soenneker.Utils.Paths.Resources" Version="4.0.257" />
+        <PackageReference Include="Soenneker.Utils.Paths.Resources" Version="4.0.258" />
     </ItemGroup>
 </Project>
